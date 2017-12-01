@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body,ul,ol{margin:0; padding:0;}
+        ul,ol{list-style:none;}
+        a{text-decoration:none;}
+
+        .banner{width:500px; height:300px; margin:50px auto; position:relative; overflow:hidden;}
+        ul{width:400%; height:100%; position:absolute; left:0; top:0; zoom:1;
+            -webkit-transition: left 1s;
+            -moz-transition: left 1s;
+            -ms-transition: left 1s;
+            -o-transition: left 1s;
+            transition: left 1s;}
+        ul:after{content:" "; display: block; clear: both;}
+        ul li{width:500px; height:300px; float:left;}
+        ul a{display:block; text-align: center; line-height:300px; font-size:100px; color:white;}
+        ol{position:absolute; width:80px; height:20px; left:0; right:0; bottom:20px; margin:auto; font-size:0;}
+        ol li{width:10px; height:10px; margin:5px; border-radius:50%; background:white; opacity: 0.5; display: inline-block;}
+
+        .next,.prev{
+            font-size:40px; text-align: center; line-height: 44px; width:30px; height: 50px; display: none; opacity: 0.3;
+            background:rgba(0,0,0,0.3); position:absolute; color:white; top:0; bottom:0; margin:auto; cursor:pointer;}
+        .prev{left:0;}
+        .next{right:0;}
+
+        .banner:hover .next,.banner:hover .prev{display: block;}
+        .next:hover,.prev:hover{opacity: 0.8;}
+
+    </style>
+</head>
+<body>
+<div class="banner">
+    <ul>
+        <li><a style="background:#a40000;" href="#">1</a></li>
+        <li><a style="background:#337340;" href="#">2</a></li>
+        <li><a style="background:#8b3f74;" href="#">3</a></li>
+        <li><a style="background:#37588b;" href="#">4</a></li>
+    </ul>
+    <ol>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ol>
+    <div class="next">›</div>
+    <div class="prev">‹</div>
+</div>
+
+</body>
+</html>
+<script>
+    var banner=document.querySelector(".banner");
+    var bannerUl=document.querySelector("ul");
+    var bannerOl=document.querySelectorAll("ol li");
+    var next=document.querySelector(".next");
+    var prev=document.querySelector(".prev");
+
+    var num=0;
+
+    bannerOl[0].style.opacity=1;
+
+    for(var i=0;i<bannerOl.length;i++){
+        bannerOl[i].index=i;
+        bannerOl[i].onmouseover=function(){
+            for(var j=0;j<bannerOl.length;j++){
+                bannerOl[j].style.opacity="";
+            }
+            bannerUl.style.left=-bannerUl.children[0].offsetWidth*this.index+"px";
+            this.style.opacity=1;
+            num=this.index;
+        }
+    }
+
+    function addNext(){
+        num++;
+        if(num>bannerOl.length-1){
+            num=0;
+        }
+        for(var j=0;j<bannerOl.length;j++){
+            bannerOl[j].style.opacity="";
+        }
+        bannerUl.style.left=-bannerUl.children[0].offsetWidth*num+"px";
+        bannerOl[num].style.opacity=1;
+    }
+
+    function reducePrev(){
+        num--;
+        if(num<0){
+            num=bannerOl.length-1;
+        }
+        for(var j=0;j<bannerOl.length;j++){
+            bannerOl[j].style.opacity="";
+        }
+        bannerUl.style.left=-bannerUl.children[0].offsetWidth*num+"px";
+        bannerOl[num].style.opacity=1;
+    }
+
+    prev.onclick=function(){
+        reducePrev();
+    };
+    next.onclick=function(){
+        addNext();
+    };
+
+    var setTm;
+    function setT(){
+        setTm=setInterval(function(){
+            addNext();
+        },3000)
+    }
+    setT();
+
+    banner.onmouseover=function(){
+        clearInterval(setTm);
+    };
+
+    banner.onmouseout=function(){
+        setT();
+    }
+</script>
